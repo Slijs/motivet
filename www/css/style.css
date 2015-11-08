@@ -1,0 +1,33 @@
+/* Empty. Add your own CSS if you like */
+
+.Wisdom-background {
+	background-color: #abcfd7;
+}
+
+.Inspiring-background {
+	background-color: #abd7be;
+}
+
+.Motivational-background {
+	background-color: #abb8d7;
+}
+
+.slider { height: 100%; text-align: center }
+.scroll { height: 100% }
+.slide-wrap {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	height: 100%;
+	padding: 50px;
+}
+.slide-wrap h1 {
+	padding-bottom: 100px;
+}
+.slide-wrap-buttons {
+	border: none;
+	background-color: inherit;
+}
+.liked-quote i {
+	color: #ff0d0d;
+}

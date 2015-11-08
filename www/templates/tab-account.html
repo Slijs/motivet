@@ -1,0 +1,15 @@
+<ion-view title="Settings">
+    <ion-content class="padding">
+		<div class="list">
+			<div class="item item-divider">
+				Categories
+			</div>
+			<ion-checkbox ng-repeat="category in $storage.categoryNames"
+				ng-model="category.checked" 
+				ng-checked="category.checked">
+				{{ category.text }}
+			</ion-checkbox>
+			<button class="button button-full button-positive" ng-click="categorySelectionChange()">Apply</button>
+		</div>
+    </ion-content>
+</ion-view>

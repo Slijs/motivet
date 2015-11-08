@@ -1,0 +1,23 @@
+<ion-view title="Quotes">
+    <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refreshQuotes()"></ion-refresher>
+        <ion-slide-box show-pager="false" pager-click="navSlide(index)" does-continue="true" on-slide-changed="onSlideChanged(index)" active-slide="currentIndex">
+            <ion-slide ng-repeat="quotation in $storage.quotations">
+                <div class="slide-wrap {{quotation.category}}-background">
+                    <h1 ng-bind="quotation.quote"></h1>
+                    <div class="item tabs tabs-secondary tabs-icon-left slide-wrap-buttons">
+                        <button class="tab-item button button-clear button-dark" ng-click="likeQuote({{$index}})">
+                            <i class="icon ion-android-favorite"></i>
+                            Like
+                        </buton>
+                        <button class="tab-item button button-clear button-dark" ng-click="shareQuote({{$index}})">
+                            <i class="icon ion-share"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            </ion-slide>
+        </ion-slide-box>
+
+    </ion-content>
+</ion-view>
