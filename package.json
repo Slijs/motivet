@@ -1,7 +1,7 @@
 {
-  "name": "myapp",
+  "name": "Motivet",
   "version": "1.0.0",
-  "description": "myApp: An Ionic project",
+  "description": "Motivation from Josh Okello",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",

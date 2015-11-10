@@ -1,5 +1,5 @@
 {
-  "name": "myApp",
+  "name": "Motivet",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#master"

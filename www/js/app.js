@@ -132,9 +132,9 @@ angular.module('starter',
             }
 
             console.log('IONIC PLATFORM READY');
-            console.log($rootScope);
-            console.log($localStorage);
-            console.log(Date());
+            //console.log("$rootScope is: " + JSON.stringify($rootScope));
+            console.log("$localStorage is: " + JSON.stringify($localStorage));
+            console.log("Current date is: " + Date());
 
             // initialize local storage objects if they do not already exist
             $rootScope.$storage = $localStorage;
