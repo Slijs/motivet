@@ -1,16 +1,38 @@
 /* Empty. Add your own CSS if you like */
 
 .Wisdom-background {
-	background-color: #abcfd7;
+	background-color: #387ef5;
 }
 
 .Inspiring-background {
-	background-color: #abd7be;
+	background-color: #ff733c;
 }
 
 .Motivational-background {
-	background-color: #abb8d7;
+	background-color: #3cd3ff;
 }
+.Wisdom-border {
+	border-left: 4px solid #387ef5;
+	border-right: 4px solid #387ef5;
+}
+
+.Inspiring-border {
+	border-left: 4px solid #ff733c;
+	border-right: 4px solid #ff733c;
+}
+
+.Motivational-border {
+	border-left: 4px solid #3cd3ff;
+	border-right: 4px solid #3cd3ff;
+}
+
+.Wisdom-background div.tabs,
+.Inspiring-background div.tabs,
+.Motivational-background div.tabs {
+	background-color: transparent !important;
+	border: none !important;
+}
+
 
 .slider { height: 100%; text-align: center }
 .scroll { height: 100% }
@@ -23,10 +45,26 @@
 }
 .slide-wrap h1 {
 	padding-bottom: 100px;
+	color: white;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 3em;
+	max-height: 80%;
+	overflow: hidden;
+}
+.slide-wrap-buttons {
+	position: absolute;
+	left: 0;
+	bottom: 25px;
+}
+.string-long {
+	font-size: 2em !important;
+}
+.string-short {
+	font-size: 3.5em !important;
 }
 .slide-wrap-buttons {
 	border: none;
-	background-color: inherit;
+	background-color: transparent;
 }
 .liked-quote i {
 	color: #ff0d0d;

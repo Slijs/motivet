@@ -6,10 +6,13 @@
 			</div>
 			<ion-checkbox ng-repeat="category in $storage.categoryNames"
 				ng-model="category.checked" 
-				ng-checked="category.checked">
+				ng-checked="category.checked"
+				ng-click="categoryClick()"
+				class="{{category.text}}-border">
 				{{ category.text }}
 			</ion-checkbox>
-			<button class="button button-full button-positive" ng-click="categorySelectionChange()">Apply</button>
+			<button ng-class="{'button button-full button-light': !categoryClicked, 'button button-full button-positive': categoryClicked}" 
+			ng-click="categorySelectionChange()">Apply</button>
 		</div>
     </ion-content>
 </ion-view>

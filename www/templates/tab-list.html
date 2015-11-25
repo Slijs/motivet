@@ -1,17 +1,17 @@
 <ion-view title="Favourites">
     <ion-content>
-        <div class="list card" ng-repeat="favourite in $storage.favourites">
+        <div class="list card" ng-repeat="favourite in $storage.favourites | orderBy:$index:true">
             <div class = "item {{favourite.category}}-background">
             </div>
             <div class = "item item-body">
                 <h2>{{favourite.quote}}</h2>
             </div>
-            <div class="item tabs tabs-secondary tabs-icon-left">
-                <button class="tab-item button button-clear button-dark liked-quote" ng-click="unlikeFavourite({{$index}})">
+            <div class="button-bar">
+                <button class="button button-clear button-dark liked-quote" ng-click="unlikeFavourite(favourite)">
                     <i class="icon ion-android-favorite"></i>
                     Unlike
                 </buton>
-                <button class="tab-item button button-clear button-dark" ng-click="shareFavourite({{$index}})">
+                <button class="button button-clear button-dark" ng-click="shareFavourite(favourite)">
                     <i class="icon ion-share"></i>
                     Share
                 </button>

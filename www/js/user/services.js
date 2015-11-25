@@ -1,7 +1,7 @@
 angular.module('user.services', [])
 
-    .service('UserService', ['$q', '$http',
-        function ($q, $http) {
+    .service('UserService', ['$q', '$http', '$localStorage',
+        function ($q, $http, $localStorage) {
 
             var parseInitialized = false;
 
@@ -21,12 +21,16 @@ angular.module('user.services', [])
                         $http.get('parse-config.json').success(function(data) {
                             ParseConfiguration = data;
                         }).then(function() {
+                            console.log(JSON.stringify(ParseConfiguration));
+                            //Parse.initialize(ParseConfiguration.applicationId, ParseConfiguration.javascriptKey);
                             Parse.initialize(ParseConfiguration.applicationId, ParseConfiguration.javascriptKey);
                             parseInitialized = true;
                             console.log("parse initialized in init function");
+
                         });
                     }
-                    return $q.resolve();
+                    return $q.when(parseInitialized);
+                    //return $q.resolve();
 /*
                     var currentUser = Parse.User.current();
                     if (currentUser) {
@@ -93,6 +97,57 @@ angular.module('user.services', [])
                     defered.resolve();
                     return defered.promise;
 
+                },
+
+                registerPushCategories: function () {
+                    /*
+                    var ParseConfiguration = null;
+                    var putObject = null;
+
+                    $http.get('parse-config.json').success(function(data) {
+                        ParseConfiguration = data;
+                    }).then(function() {
+                        console.log(JSON.stringify(ParseConfiguration));
+                        // can only use rest API, so create the object to put
+                        putObject = {
+                            headers: {
+                                "X-Parse-Application-Id": ParseConfiguration.applicationId,
+                                "X-Parse-REST-API-Key": ParseConfiguration.restApiKey,
+                                "Content-Type": "application/json",
+                                'Authorization': 'basic ' + 'cHBlazdUNWU5akhFZ3hSaW1ob3ZlODNmUm1pRExndlZYMjdWSDFZSDo='
+                            },
+                            data: {
+                                "channels": JSON.stringify($localStorage.selectedCategories)
+                            }
+                        };
+                    }).then(function() {
+                        console.log(JSON.stringify(putObject));
+                        $http.put('https://api.parse.com/1/installations/mrmBZvsErB', putObject).then(function(response) {
+                            // success
+                            console.log("update categories succeeded");
+                        }, function(response) {
+                            //error
+                            console.log("update categories failed" + JSON.stringify(response));
+                        });
+                    });*/
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("PUT", "https://api.parse.com/1/installations", true);
+                    xhr.setRequestHeader("X-Parse-Application-Id", "gSvrhx9CTETrwe2RDv1BJSc0u1FvKc6XG73exanZ");
+                    xhr.setRequestHeader("X-Parse-REST-API-Key", "ppek7T5e9jHEgxRimhove83fRmiDLgvVX27VH1YH");
+                    xhr.setRequestHeader("Content-Type", "application/json");
+
+                    xhr.onreadystatechange = function() {
+                      if (xhr.readyState == 4) {
+                        var result = JSON.parse(xhr.responseText);
+                        if (result.objectId) {
+                          alert("saved an object with id: " + result.objectId);
+                        }
+                      }
+                    }
+                      
+                    var data = JSON.stringify({"channels": ["Wisdom", "Inspiring", "Motivational"],"deviceType": "android","deviceToken":$localStorage.deviceToken});
+                    xhr.send(data);
                 }
 
             }

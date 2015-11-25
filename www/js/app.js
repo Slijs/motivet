@@ -65,7 +65,7 @@ angular.module('starter',
                         templateUrl: 'templates/tab-list.html',
                         controller: 'ListCtrl'
                     }
-                },
+                }
             })
             .state('tab.list-detail', {
                 url: '/list/:itemId',
@@ -79,6 +79,7 @@ angular.module('starter',
 
             .state('tab.quotes', {
                 url: '/quotes',
+                cache: false,
                 views: {
                     'tab-quotes': {
                         templateUrl: 'templates/tab-quotes.html',
@@ -131,6 +132,30 @@ angular.module('starter',
                 StatusBar.styleDefault();
             }
 
+            // 
+
+            Ionic.io();
+
+            var push = new Ionic.Push({
+                "debug": false,
+                "onNotification": function(notification) {
+                    var payload = notification.payload;
+                    console.log(notification, payload);
+                },
+                "onRegister": function(data) {
+                    console.log(data.token);
+                }
+            });
+
+            push.register(function(token) {
+                // Log out your device token (Save this!)
+                console.log("Got Token:",token.token);
+                $localStorage.deviceToken = token.token;
+            });
+
+
+
+
             console.log('IONIC PLATFORM READY');
             //console.log("$rootScope is: " + JSON.stringify($rootScope));
             console.log("$localStorage is: " + JSON.stringify($localStorage));
@@ -139,28 +164,36 @@ angular.module('starter',
             // initialize local storage objects if they do not already exist
             $rootScope.$storage = $localStorage;
 
-            if (typeof $rootScope.$storage.quotations === 'undefined') {
-                $rootScope.$storage.quotations = [];
+            if (typeof $localStorage.quotations === 'undefined') {
+                $localStorage.quotations = [];
             }
 
-            if (typeof $rootScope.$storage.favourites === 'undefined') {
-                $rootScope.$storage.favourites = [];
+            if (typeof $localStorage.favourites === 'undefined') {
+                $localStorage.favourites = [{"category":"Wisdom","objectId":"SPECIAL","quote":"Looks like you haven't liked any Motivets! Click on the heart button next to your favourite quotes to save them here."}];
             }
 
-            if (typeof $rootScope.$storage.quotesLastUpdated === 'undefined') {
-                $rootScope.$storage.quotesLastUpdated = new Date(0);
+            if (typeof $localStorage.quotesLastUpdated === 'undefined') {
+                $localStorage.quotesLastUpdated = new Date(0);
             }
 
-            if (typeof $rootScope.$storage.categoryNames === 'undefined') {
-                $rootScope.$storage.categoryNames = [
+            if (typeof $localStorage.categoryNames === 'undefined') {
+                $localStorage.categoryNames = [
                     {text: "Inspiring", checked: true},
                     {text: "Wisdom", checked: true},
                     {text: "Motivational", checked: true}
-
                 ];
             }
 
-            $ionicSlideBoxDelegate.update();
+            if (typeof $localStorage.selectedCategories === 'undefined') {
+                $localStorage.selectedCategories = ["Inspiring", "Wisdom", "Motivational"];
+            }
+
+            if (typeof $localStorage.firstLoad === 'undefined') {
+                $localStorage.firstLoad = true;
+            }
+
+
+
             
         });
     })

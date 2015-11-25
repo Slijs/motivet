@@ -1,7 +1,7 @@
 angular.module('app.services', [])
 	
-    .service('AppService', ['$q', '$rootScope',
-        function ($q, $rootScope) {
+    .service('AppService', ['$q', '$rootScope', '$localStorage',
+        function ($q, $rootScope, $localStorage) {
 
         	return {
 
@@ -59,7 +59,7 @@ angular.module('app.services', [])
 				addQuotes: function(receivedQuotes) {
 					return $q(function(resolve, reject){
 						setTimeout(function(){
-		                    var storedQuotes = $rootScope.$storage.quotations;
+		                    var storedQuotes = $localStorage.quotations;
 		                    console.log(receivedQuotes);
 		                    if (receivedQuotes.length == 0) {
 		                        console.log('REJECTED');
@@ -75,6 +75,11 @@ angular.module('app.services', [])
 					});
 
 				},
+
+	            // test to see if not all categories are false
+	            atLeastOneSelected: function(element) {
+	                return element.checked;
+	            }
         	}
     	}
     ])
