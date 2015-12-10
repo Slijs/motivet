@@ -1,18 +1,32 @@
 <ion-view title="Settings">
     <ion-content class="padding">
-		<div class="list">
+		<ul class="list">
 			<div class="item item-divider">
 				Categories
 			</div>
-			<ion-checkbox ng-repeat="category in $storage.categoryNames"
+			<ion-toggle ng-repeat="category in $storage.categoryNames"
 				ng-model="category.checked" 
 				ng-checked="category.checked"
 				ng-click="categoryClick()"
-				class="{{category.text}}-border">
-				{{ category.text }}
-			</ion-checkbox>
-			<button ng-class="{'button button-full button-light': !categoryClicked, 'button button-full button-positive': categoryClicked}" 
-			ng-click="categorySelectionChange()">Apply</button>
-		</div>
+				class="item item-icon-left"
+				toggle-class="toggle-{{category.text}}">
+					<i class="icon {{category.icon}}"></i>
+					{{ category.text }}
+			</ion-toggle>
+			<button ng-class="{'button button-full button-light spinner-button': !categoryClicked, 'button button-full button-positive spinner-button': categoryClicked}" 
+			ng-click="categorySelectionChange()">Apply
+				<ion-spinner ng-show="showLoadingSpinner"></ion-spinner>
+			</button>
+		</ul>
+		<!-- Allow user to choose time to recieve notifications about new daily quotes 
+		<ionic-timepicker input-obj="timePickerObject">
+			<button class="button button-block button-positive overflowShow">
+				Set Notification Time (currently {{timePickerString}})
+			</button>
+		</ionic-timepicker>
+		-->
     </ion-content>
+	<ion-footer-bar class="bar-positive">
+		<p class="title">App by philipbrink.com</p>
+	</ion-footer-bar>
 </ion-view>

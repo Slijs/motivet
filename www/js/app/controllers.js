@@ -17,20 +17,22 @@ angular.module('app.controllers', [])
         '$rootScope',
         '$scope',
         'AppService',
+        'UserService',
         '$localStorage',
         '$ionicSlideBoxDelegate',
         '$timeout',
         '$window',
         '$cordovaSocialSharing',
         '$ionicLoading',
-        '$ionicPopup', // <-- controller dependencies
-        function ($state, $scope, $rootScope, AppService, $localStorage, $ionicSlideBoxDelegate, $timeout, $window, $cordovaSocialSharing, $ionicLoading, $ionicPopup) {
+        '$ionicPopup',
+        '$ionicModal', // <-- controller dependencies
+        function ($state, $scope, $rootScope, AppService, UserService, $localStorage, $ionicSlideBoxDelegate, $timeout, $window, $cordovaSocialSharing, $ionicLoading, $ionicPopup, $ionicModal) {
 
             // Refresh quotesionicView
             $scope.refreshQuotes = function() {
                 // make sure that there are categories selected to get quotes from
                 if ($localStorage.categoryNames.some(AppService.atLeastOneSelected)) {
-                    $scope.showLoadingIcon();
+                    //$scope.showLoadingIcon(); TODO -- ADD IN A BETTER LOOKING METHOD TO SHOW THAT IT'S LOADING
                     var dataList = null;
                     var categoryNames = $localStorage.categoryNames;
 
@@ -43,7 +45,7 @@ angular.module('app.controllers', [])
                             querySelection.equalTo("category", categoryNames[i].text);
                             querySelector.push(querySelection);
                         }
-                    };
+                    }
                     // finalize the parse.com query options, then get the quotes
                     var query = Parse.Query.or.apply(Parse.Query, querySelector);
                     query.limit(30);
@@ -58,10 +60,11 @@ angular.module('app.controllers', [])
                     query.find({
                         success: function(_response) {
                             dataList = _response;
-                            // Check if the category has changed. If so, we will repopulate the
+                            // Check if the category has changed, OR if there haven't been any quotes loaded before.
+                            // If so, we will repopulate the
                             // entire list, and change the categoryChanged back to false.
                             // Otherwise, we will simply add the new quotes.
-                            if ($rootScope.categoryChanged) {
+                            if ($rootScope.categoryChanged || $localStorage.firstLoad || $localStorage.quotations[0].objectId=='SPECIAL') {
                                 AppService.renewQuotes(dataList)
                                 .then(function(quotesToStore){
                                     $localStorage.quotations = quotesToStore;
@@ -97,12 +100,14 @@ angular.module('app.controllers', [])
                                     // Stop the ion-refresher from spinning
                                     $scope.$broadcast('scroll.refreshComplete');
                                     $scope.hideLoadingIcon();
+                                    $scope.showLoadingSpinner = false;
                                 });
                             }
                             $localStorage.quotesLastUpdated = new Date();
                         },
                         error: function() {
                             $scope.hideLoadingIcon();
+                            $scope.showLoadingSpinner = false;
                             $scope.$broadcast('scroll.refreshComplete');
                             $scope.showAlert("Server Error", "Problem downloading quotes. Try again later.");
                         }
@@ -115,6 +120,7 @@ angular.module('app.controllers', [])
                 } else {
                     $scope.$broadcast('scroll.refreshComplete');
                     $scope.hideLoadingIcon();
+                    $scope.showLoadingSpinner = false;
                     $scope.showAlert("No Categories Selected", "There are no categories selected for you to view. Please select one or more categories in the Settings tab.");
                 }
             }
@@ -153,13 +159,13 @@ angular.module('app.controllers', [])
             $scope.shareQuote = function (quote) {
                 console.log("share button clicked");
                 console.log("quote is " + quote.quote);
-                $cordovaSocialSharing.share(quote.quote, "Here's some " + quote.category, "https://pbs.twimg.com/profile_images/378800000614832437/158880c3ce8f901b877d0113d8f0a4dc_400x400.jpeg", "https://twitter.com/JoshOkello");
+                $cordovaSocialSharing.share(quote.quote, "Thought you'd like this quote from Motivet", "www/img/iconbackgroundsmall.png", "https://twitter.com/JoshOkello");
             }
 
             $scope.shareFavourite = function (quote) {
                 console.log("share button clicked");
                 console.log("quote is " + quote.quote);
-                $cordovaSocialSharing.share(quote, quote.category + " for you.", "www/img/ionic.png", "https://twitter.com/JoshOkello");
+                $cordovaSocialSharing.share(quote, "Thought you'd like this quote from Motivet", "www/img/iconbackgroundsmall.png", "https://twitter.com/JoshOkello");
             }
 
             $scope.doLogoutAction = function () {
@@ -179,7 +185,10 @@ angular.module('app.controllers', [])
             }
 
             $scope.whatIsStringLength = function(string) {
-                if (string.length > 75) {
+                if (string.length > 150) {
+                    return 'very-long';
+                }
+                else if (string.length > 75) {
                     return 'long';
                 } else if (string.length < 30) {
                     return 'short';
@@ -200,15 +209,18 @@ angular.module('app.controllers', [])
                 $scope.refreshQuotes();
             });
 
+            // UGLY FIX, ionicSlideBoxDelegate doesn't get properly updated on changes to the contents of the slidebox. This forces an update 
             $scope.$on('$ionicView.enter', function(event, args) {
                 console.log('$ionicView.enter fired');
-                if ($localStorage.quotations.length == 0 || (typeof $localStorage.quotations === 'undefined')) {
+                if ($localStorage.quotations.length == 0 || (typeof $localStorage.quotations === 'undefined') || $localStorage.quotations[0].objectId == 'SPECIAL') {
                     $scope.refreshQuotes();
                 }
                 $timeout(function() {
                     $ionicSlideBoxDelegate.update();
                     console.log('ionicSlideBoxDelegate updated');
                 }, 1000);
+
+                //console.log("PARSE INSTALLATION ID: " + Parse._getInstallationId());
             });
 
             // Loading indicators
@@ -221,8 +233,55 @@ angular.module('app.controllers', [])
             $scope.hideLoadingIcon = function(){
                 $ionicLoading.hide();
             };
+/*
+            $ionicModal.fromTemplateUrl('templates/first-start-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function(modal) {
+                $scope.modal = modal;
+            });*/
 
+            $ionicModal.fromTemplateUrl('templates/first-start-modal.html', {scope: $scope, animation: 'slide-in-up'})
+                .then(function(modal) {
+                    $scope.introModal = modal;
+            });
 
+            $scope.showIntroModal = function() {
+                $scope.introModal.show();
+            };
+
+            $scope.hideIntroModal = function() {
+                $scope.introModal.hide();
+                $localStorage.firstLoad = false;
+            };
+/*
+            $ionicModal.fromTemplateUrl('templates/logo-modal.html', {scope: $scope, animation: 'slide-in-up'})
+                .then(function(modal) {
+                    $scope.logoModal = modal;
+            });
+
+            $scope.showLogoModal = function() {
+                $scope.logoModal.show();
+            };
+
+            $scope.hideLogoModal = function() {
+                $scope.logoModal.hide();
+            };*/
+
+            if ($localStorage.firstLoad) {
+                /*$scope.showLogoModal();
+                $timeout(function() {
+                    $scope.hideLogoModal();
+                }, 1500);*/
+                $timeout(function() {
+                    $scope.showIntroModal();
+                }, 300);
+
+                // subscribe to the proper channels when first loading app
+                AppService.createLocalstorageCategoryNameArray().then(function(){
+                    UserService.registerPushCategories($localStorage.selectedCategories);
+                });
+            };
 
         }])
     .controller('AccountCtrl', [
@@ -234,20 +293,30 @@ angular.module('app.controllers', [])
                 $scope.categoryClicked = true;
             }
 
+            // show or hide loading spinner
+            $scope.showLoadingSpinner = false;
+
             // broadcast a request to refresh quotes
             $scope.categorySelectionChange = function() {
+                // show loading spinner
+                $scope.showLoadingSpinner = true;
+
                 // make sure at least one category is checked
                 if ($localStorage.categoryNames.some(AppService.atLeastOneSelected)) {
                     $rootScope.categoryChanged = true;
                     $rootScope.$broadcast('refreshQuotes');
                     $scope.categoryClicked = false;
-                    $localStorage.selectedCategories = []; 
+                    //$localStorage.selectedCategories = []; 
                     console.log("sent broadcast refreshQuotes");
+                    /*
                     for (i = 0; i < $localStorage.categoryNames.length; i++) {
                         if ($localStorage.categoryNames[i].checked) {
                             $localStorage.selectedCategories.push($localStorage.categoryNames[i].text);
                         }
-                    }
+                    }*/
+                    AppService.createLocalstorageCategoryNameArray().then(function(){
+                        UserService.registerPushCategories($localStorage.selectedCategories);
+                    });
                 } else {
                     $ionicPopup.alert({
                         title: 'Must Select a Category',
@@ -259,11 +328,46 @@ angular.module('app.controllers', [])
                 } 
             };
 
+            $scope.$on('scroll.refreshComplete', function(event, args) {
+                $scope.showLoadingSpinner = false;
+            });
+
             $scope.$on('$ionicView.leave', function(event, args) {
                 if ($localStorage.categoryNames.every(AppService.atLeastOneSelected)) {
                     $localStorage.categoryNames[0].checked = true;
                 }
                 console.log('no categories selected when leaving settings, automatically selected category 1.');
             });
+
+/*
+            $localStorage.notificationTime = "0700";
+
+            // timepicker
+            $scope.timePickerObject = {
+                inputEpochTime: (parseInt($localStorage.notificationTime) * 60),
+                step: 15,  //Optional
+                format: 24,  //Optional
+                titleLabel: 'Notification Time',  //Optional
+                setLabel: 'Set',  //Optional
+                closeLabel: 'Close',  //Optional
+                setButtonType: 'button-positive',  //Optional
+                closeButtonType: 'button-stable',  //Optional
+                callback: function (val) {    //Mandatory
+                    $scope.timePickerCallback(val);
+                }
+            };
+
+            $scope.timePickerCallback = function(val) {
+                if (typeof (val) === 'undefined') {
+                    console.log('Time not selected');
+                } else {
+                    var selectedTime = new Date(val * 1000);
+                    console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+                }
+            }
+
+            $scope.timePickerString = $localStorage.notificationTime.toString().replace(/\d{2}/, "$&:");
+            //new Date(null, null, null, null, null, $scope.timePickerObject.inputEpochTime).toTimeString().match(/\d{2}:\d{2}:\d{2}/)[0];
+            */
 
         }]);

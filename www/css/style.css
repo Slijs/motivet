@@ -4,21 +4,37 @@
 	background-color: #387ef5;
 }
 
-.Inspiring-background {
-	background-color: #ff733c;
+.toggle-Wisdom input:checked + .track{
+	background-color: #387ef5;
+	border-color: #387ef5;
 }
 
-.Motivational-background {
-	background-color: #3cd3ff;
-}
 .Wisdom-border {
 	border-left: 4px solid #387ef5;
 	border-right: 4px solid #387ef5;
 }
 
-.Inspiring-border {
+.Inspirational-background {
+	background-color: #ff733c;
+}
+
+.toggle-Inspirational input:checked + .track{
+	background-color: #ff733c;
+	border-color: #ff733c;
+}
+
+.Inspirational-border {
 	border-left: 4px solid #ff733c;
 	border-right: 4px solid #ff733c;
+}
+
+.Motivational-background {
+	background-color: #3cd3ff;
+}
+
+.toggle-Motivational input:checked + .track{
+	background-color: #3cd3ff;
+	border-color: #3cd3ff;
 }
 
 .Motivational-border {
@@ -26,9 +42,54 @@
 	border-right: 4px solid #3cd3ff;
 }
 
+.Spiritual-background {
+	background-color: #ca38f5;
+}
+
+.toggle-Spiritual input:checked + .track{
+	background-color: #ca38f5;
+	border-color: #ca38f5;
+}
+
+.Spiritual-border {
+	border-left: 4px solid #ca38f5;
+	border-right: 4px solid #ca38f5;
+}
+
+.Leadership-background {
+	background-color: #f53851;
+}
+
+.toggle-Leadership input:checked + .track{
+	background-color: #f53851;
+	border-color: #f53851;
+}
+
+.Leadership-border {
+	border-left: 4px solid #f53851;
+	border-right: 4px solid #f53851;
+}
+
+.Success-background {
+	background-color: #45ae05;
+}
+
+.toggle-Success input:checked + .track{
+	background-color: #45ae05;
+	border-color: #45ae05;
+}
+
+.Success-border {
+	border-left: 4px solid #45ae05;
+	border-right: 4px solid #45ae05;
+}
+
 .Wisdom-background div.tabs,
-.Inspiring-background div.tabs,
-.Motivational-background div.tabs {
+.Inspirational-background div.tabs,
+.Motivational-background div.tabs,
+.Spiritual-background div.tabs,
+.Leadership-background div.tabs,
+.Success-background div.tabs {
 	background-color: transparent !important;
 	border: none !important;
 }
@@ -56,6 +117,9 @@
 	left: 0;
 	bottom: 25px;
 }
+.string-very-long {
+	font-size: 1.2em !important;
+}
 .string-long {
 	font-size: 2em !important;
 }
@@ -68,4 +132,44 @@
 }
 .liked-quote i {
 	color: #ff0d0d;
+}
+
+/* MODAL WINDOW */
+.first-start-modal {
+	background-color: #fff;
+}
+
+.modal ion-content {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+.modal ion-content div {
+	text-align: center;
+}
+
+.modal ion-content div img {
+	padding-bottom: 40px;
+	max-width: 40%;
+}
+
+.modal ion-content div p {
+	padding: 0 50px 50px 50px;
+	font-size: 1.2em;
+	line-height: 1.5em;
+}
+
+.modal ion-content button {
+	position: absolute;
+	bottom: 15px;
+	width: 90%;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+}
+
+.spinner-button .spinner {
+	vertical-align: sub;
+	zoom: 75%;
 }

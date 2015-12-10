@@ -22,15 +22,20 @@
       "locator": "https://github.com/apache/cordova-plugin-whitelist.git",
       "id": "cordova-plugin-whitelist"
     },
-    "phonegap-plugin-push"
+    "phonegap-plugin-push",
+    "ionic-plugin-keyboard",
+    {
+      "variables": {
+        "APP_ID": "gSvrhx9CTETrwe2RDv1BJSc0u1FvKc6XG73exanZ",
+        "CLIENT_KEY": "aBb1wUWdRvZiWdoYVHE8PoQOPvRmZiMVUwlgKfMd"
+      },
+      "locator": "medlei-parse-push-plugin",
+      "id": "medlei-parse-push-plugin"
+    },
+    "cordova-plugin-x-socialsharing"
   ],
   "cordovaPlatforms": [
     "android",
-    {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
-    },
     {
       "platform": "ios",
       "version": "",

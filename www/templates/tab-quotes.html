@@ -5,6 +5,7 @@
             <ion-slide ng-repeat="quotation in $storage.quotations">
                 <div class="slide-wrap {{quotation.category}}-background">
                     <h1 class="string-{{whatIsStringLength(quotation.quote)}}" ng-bind="quotation.quote"></h1>
+                    <ion-spinner class="spinner-dark" ng-show="quotation.objectId=='SPECIAL'"></ion-spinner>
                     <div class="item tabs tabs-secondary tabs-icon-left slide-wrap-buttons">
                         <button class="tab-item button button-clear button-dark" ng-click="likeQuote($index)">
                             <i class="icon ion-android-favorite"></i>

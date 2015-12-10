@@ -5,13 +5,14 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter',
     [
-        'ionic',
+        'ionic','ionic.service.core',
         'ngStorage',
         'ngCordova',
         'app.controllers',
         'app.services',
         'user.controllers',
-        'user.services'
+        'user.services',
+        'ionic-timepicker'
     ]
 )
 
@@ -104,7 +105,7 @@ angular.module('starter',
         $urlRouterProvider.otherwise('/tab/quotes');
 
     })
-    .run(function ($ionicPlatform, $rootScope, $state, $localStorage, $ionicSlideBoxDelegate) {
+    .run(function ($ionicPlatform, $rootScope, $state, $localStorage, $ionicSlideBoxDelegate, UserService, AppService, $http) {
 
 
         $rootScope.$on('$stateChangeError',
@@ -132,7 +133,62 @@ angular.module('starter',
                 StatusBar.styleDefault();
             }
 
-            // 
+            // initialize local storage objects if they do not already exist
+            $rootScope.$storage = $localStorage;
+
+            if (typeof $localStorage.quotations === 'undefined') {
+                $localStorage.quotations = [{"category":"Wisdom","objectId":"SPECIAL","quote":"Getting Quotes..."}];
+            }
+
+            if (typeof $localStorage.favourites === 'undefined') {
+                $localStorage.favourites = [{"category":"Wisdom","objectId":"SPECIAL","quote":"Looks like you haven't favourited any Motivets! Click on the heart button next to your favourite quotes to save them here."}];
+            }
+
+            if (typeof $localStorage.quotesLastUpdated === 'undefined') {
+                $localStorage.quotesLastUpdated = new Date(0);
+            }
+
+            if (typeof $localStorage.categoryNames === 'undefined') {
+                $localStorage.categoryNames = [
+                    {text: "Inspirational", checked: true, icon: "ion-jet"},
+                    {text: "Motivational", checked: true, icon: "ion-paper-airplane"},
+                    {text: "Wisdom", checked: true, icon: "ion-university"},
+                    {text: "Leadership", checked: true, icon: "ion-earth"},
+                    {text: "Success", checked: true, icon: "ion-trophy"},
+                    {text: "Spiritual", checked: true, icon: "ion-ios-book"}
+                ];
+            }
+
+            if (typeof $localStorage.selectedCategories === 'undefined') {
+                $localStorage.selectedCategories = ["Inspiring", "Wisdom", "Motivational"];
+            }
+
+            if (typeof $localStorage.firstLoad === 'undefined') {
+                $localStorage.firstLoad = true;
+            }
+
+            // time in hours and minutes stored as string because of Date objects being converted to strings in localstorage when using ngCordova
+            /*if (typeof $localStorage.notificationTime === 'undefined') {
+                $localStorage.notificationTime = "0900";
+            }*/
+
+            if (typeof $localStorage.installData === 'undefined') {
+                $localStorage.installData = {};
+            }
+
+            // initialize parse
+            UserService.init();
+/*            
+            var parsePlugin = window.parsePlugin;
+
+            $http.get('parse-config.json').success(function(data) {
+                var parseConfiguration = data;
+            }).then(function(parseConfiguration) {
+
+            });*/
+
+            // check to see if there are any new quotation categories available ADD THIS FEATURE BACK IN WHEN NEEDED
+            //AppService.setCategoryNames();
 
             Ionic.io();
 
@@ -153,44 +209,7 @@ angular.module('starter',
                 $localStorage.deviceToken = token.token;
             });
 
-
-
-
             console.log('IONIC PLATFORM READY');
-            //console.log("$rootScope is: " + JSON.stringify($rootScope));
-            console.log("$localStorage is: " + JSON.stringify($localStorage));
-            console.log("Current date is: " + Date());
-
-            // initialize local storage objects if they do not already exist
-            $rootScope.$storage = $localStorage;
-
-            if (typeof $localStorage.quotations === 'undefined') {
-                $localStorage.quotations = [];
-            }
-
-            if (typeof $localStorage.favourites === 'undefined') {
-                $localStorage.favourites = [{"category":"Wisdom","objectId":"SPECIAL","quote":"Looks like you haven't liked any Motivets! Click on the heart button next to your favourite quotes to save them here."}];
-            }
-
-            if (typeof $localStorage.quotesLastUpdated === 'undefined') {
-                $localStorage.quotesLastUpdated = new Date(0);
-            }
-
-            if (typeof $localStorage.categoryNames === 'undefined') {
-                $localStorage.categoryNames = [
-                    {text: "Inspiring", checked: true},
-                    {text: "Wisdom", checked: true},
-                    {text: "Motivational", checked: true}
-                ];
-            }
-
-            if (typeof $localStorage.selectedCategories === 'undefined') {
-                $localStorage.selectedCategories = ["Inspiring", "Wisdom", "Motivational"];
-            }
-
-            if (typeof $localStorage.firstLoad === 'undefined') {
-                $localStorage.firstLoad = true;
-            }
 
 
 
