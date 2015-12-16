@@ -196,6 +196,17 @@ angular.module('app.controllers', [])
                     return 'medium';
                 }
             }
+/*
+            $scope.isOverflowed = function(element) {
+                return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+            }
+
+            var scrollBoxDiv = document.getElementsByClassName('.slide-wrap');
+            if ($scope.isOverflowed(scrollBoxDiv)) {
+                console.log('OVERFLOW!!!');
+                var overflowingText = document.querySelectorAll("h1.string-very-long, h1.string-long, h1.string-medium, h1.string-short");
+                overflowingText.classList.add("overflowing-text");
+            }*/
 
             // Load the quotes on page load
             //$scope.refreshQuotes();
@@ -277,11 +288,13 @@ angular.module('app.controllers', [])
                     $scope.showIntroModal();
                 }, 300);
 
-                // subscribe to the proper channels when first loading app
+                /*// subscribe to the proper channels when first loading app ADD CHANNELS BACK IN LATER
                 AppService.createLocalstorageCategoryNameArray().then(function(){
                     UserService.registerPushCategories($localStorage.selectedCategories);
-                });
+                });*/
             };
+
+
 
         }])
     .controller('AccountCtrl', [
@@ -314,9 +327,9 @@ angular.module('app.controllers', [])
                             $localStorage.selectedCategories.push($localStorage.categoryNames[i].text);
                         }
                     }*/
-                    AppService.createLocalstorageCategoryNameArray().then(function(){
+                    /*AppService.createLocalstorageCategoryNameArray().then(function(){ // ADD BACK IN LATER
                         UserService.registerPushCategories($localStorage.selectedCategories);
-                    });
+                    });*/
                 } else {
                     $ionicPopup.alert({
                         title: 'Must Select a Category',

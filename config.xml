@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.icecreamsummertime.motivet" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.icecreamsummertime.motivet" version="0.0.3" android-versionCode="30" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Motivet</name>
   <description>
         Motivation from Josh Okello.
@@ -10,8 +10,12 @@
   <content src="index.html"/>
   <access origin="*"/>
   <allow-intent href="*"/>
+  <allow-navigation href="*" />
+  <!--
   <allow-navigation href="https://api.parse.com/1/*"/>
   <allow-navigation href="https://push.ionic.io/*"/>
+  <allow-navigation href="https://apps.ionic.io/*"/>
+-->
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>

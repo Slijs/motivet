@@ -1,7 +1,7 @@
 angular.module('user.services', [])
 
-    .service('UserService', ['$q', '$http', '$localStorage',
-        function ($q, $http, $localStorage) {
+    .service('UserService', ['$q', '$http', '$localStorage', '$rootScope',
+        function ($q, $http, $localStorage, $rootScope) {
 
             var parseInitialized = false;
 
@@ -12,20 +12,55 @@ angular.module('user.services', [])
                  * @returns {*}
                  */
                 init: function () {
-                    /*
-                    document.addEventListener("deviceready", function() {
-                        try {
-                          parsePlugin.initialize();
-                          console.log("parsePlugin works")
-                        } catch (ex) {
-                          alert("Error: " + ex);
-                        }
-                    }, false);*/
-                    //debugger;
-                    // if initialized, then return the activeUser
+                    
+                    // User initialization
+                    Ionic.io();
+
+                    var user = Ionic.User.current();
+
+                    // if the user doesn't have an id, you'll need to give it one.
+                    if (!user.id) {
+                        //Ionic.User.load(createUUID()).then(success, failure);
+                        user.id = Ionic.User.anonymousId();
+                    }
+
+                    var push = new Ionic.Push({
+                        "debug": false,
+                        "onNotification": function(notification) {
+                            var payload = notification.payload;
+                            console.log("Received notification" + notification);
+                            console.log(notification, payload);
+                            $rootScope.$broadcast('refreshQuotes');
+                        },
+                        "onRegister": function(data) {
+                            console.log(data.token);
+                        },
+                        "pluginConfig": {
+                            "ios": {
+                                "badge": true,
+                                "sound": true
+                            },
+                            "android": {
+                                "senderID": "234988447400",
+                                "sound": true,
+                                "vibrate": true,
+                                "clearNotifications": true,
+                                "forceShow": true
+                            }
+                        } 
+                    });
+
+                    push.register(function(token) {
+                        // Log out your device token (Save this!)
+                        console.log("Got Token:",token.token);
+                        user.addPushToken(token);
+                        user.save();
+                    });
+
+                    // Initialize parse for getting content
                     if (parseInitialized === false) {
                         var parseConfiguration = null;
-                        var parsePlugin = window.parsePlugin;
+                        //var parsePlugin = window.parsePlugin;
             
                         $http.get('parse-config.json').success(function(data) {
                             parseConfiguration = data;
@@ -35,9 +70,9 @@ angular.module('user.services', [])
                             Parse.initialize(parseConfiguration.applicationId, parseConfiguration.javascriptKey);
                             
                             // parsePlugin initialization, for installation ids and other push notification helpers
-                            try {
+                            /*try {
                                 // on sign in, add the user pointer to the Installation
-                                parsePlugin.initialize(parseConfiguration.applicationId, parseConfiguration.clientKey, function() {
+                                //parsePlugin.initialize(parseConfiguration.applicationId, parseConfiguration.clientKey, function() {
 
                                   parsePlugin.getInstallationObjectId( function(id) {
                                     // Success! You can now use Parse REST API to modify the Installation
@@ -50,12 +85,12 @@ angular.module('user.services', [])
                                     console.error('Error getting installation object id. ' + error);
                                   });
 
-                                }, function(e) {
+                                /*}, function(e) {
                                     console.error('Error initializing parsePlugin. initialization failed. Reason: ' + e);
-                                });
+                                });*//*
                             } catch (ex) {
                                 console.error("Error initializing parsePlugin. Caught exception: " + ex);
-                            }
+                            }*/
 
 
                             parseInitialized = true;

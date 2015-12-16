@@ -167,6 +167,10 @@ angular.module('starter',
                 $localStorage.firstLoad = true;
             }
 
+            if (typeof $localStorage.displayPushNotifications === 'undefined') {
+                $localStorage.displayPushNotifications = true;
+            }
+
             // time in hours and minutes stored as string because of Date objects being converted to strings in localstorage when using ngCordova
             /*if (typeof $localStorage.notificationTime === 'undefined') {
                 $localStorage.notificationTime = "0900";
@@ -178,36 +182,12 @@ angular.module('starter',
 
             // initialize parse
             UserService.init();
-/*            
-            var parsePlugin = window.parsePlugin;
-
-            $http.get('parse-config.json').success(function(data) {
-                var parseConfiguration = data;
-            }).then(function(parseConfiguration) {
-
-            });*/
 
             // check to see if there are any new quotation categories available ADD THIS FEATURE BACK IN WHEN NEEDED
             //AppService.setCategoryNames();
 
-            Ionic.io();
 
-            var push = new Ionic.Push({
-                "debug": false,
-                "onNotification": function(notification) {
-                    var payload = notification.payload;
-                    console.log(notification, payload);
-                },
-                "onRegister": function(data) {
-                    console.log(data.token);
-                }
-            });
 
-            push.register(function(token) {
-                // Log out your device token (Save this!)
-                console.log("Got Token:",token.token);
-                $localStorage.deviceToken = token.token;
-            });
 
             console.log('IONIC PLATFORM READY');
 

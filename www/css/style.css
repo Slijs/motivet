@@ -118,14 +118,22 @@
 	bottom: 25px;
 }
 .string-very-long {
-	font-size: 1.2em !important;
+	font-size: 17px !important;
 }
 .string-long {
-	font-size: 2em !important;
+	font-size: 25px !important;
+}
+.string-medium {
+	font-size: 35px !important;
 }
 .string-short {
-	font-size: 3.5em !important;
+	font-size: 50px !important;
 }
+
+.overflowingText {
+	transform: scale(0.5);
+}
+
 .slide-wrap-buttons {
 	border: none;
 	background-color: transparent;
